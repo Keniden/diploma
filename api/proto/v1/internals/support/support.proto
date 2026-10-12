@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package proto.v1.internals.support;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/internals/support;supportv1";
+
+// TODO(LASTMILE-008): simplified contract; real Support contract is generated
+// via easyp in the upstream repo.
+// Support сервис поддержки.
+service Support {
+  rpc CancelPackages(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc CancelShipment(google.protobuf.Empty) returns (google.protobuf.Empty);
+}

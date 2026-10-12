@@ -1,0 +1,52 @@
+config:
+  output: internal/errors
+
+definition:
+  namespace: lmt
+  errors:
+    - code: internal
+      message: Internal error. Please contact support.
+      http: InternalServerError
+      proto: Internal
+
+    - code: documents_document_not_found
+      message: Document not found.
+      http: NotFound
+      proto: NotFound
+    - code: documents_invalid_document
+      message: Invalid document data.
+      http: PreconditionFailed
+      proto: FailedPrecondition
+    - code: documents_delivery_failed
+      message: Document delivery failed.
+      http: InternalServerError
+      proto: Internal
+
+    - namespace: validation
+      errors:
+        - code: invalid_argument
+          message: Invalid request data.
+          http: BadRequest
+          proto: InvalidArgument
+
+    - namespace: resource
+      errors:
+        - code: shipment_not_found
+          message: Shipment not found.
+          http: NotFound
+          proto: NotFound
+        - code: package_not_found
+          message: Package not found.
+          http: NotFound
+          proto: NotFound
+
+    - namespace: shipping
+      errors:
+        - code: invalid_status_transition
+          message: Invalid shipment status transition from {{ .from }} to {{ .to }}.
+          http: PreconditionFailed
+          proto: FailedPrecondition
+        - code: invalid_package_action
+          message: Invalid package action {{ .action }} for status {{ .status }}.
+          http: PreconditionFailed
+          proto: FailedPrecondition

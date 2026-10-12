@@ -1,0 +1,38 @@
+# docker-compose.yml — локальный dev-стек last-mile-task
+#
+# TODO(LASTMILE-079): только для локального dev (см. правил в
+# ARCHITECTURE.md); production-контур живёт в deploy/services/*.
+#
+# Запуск: docker compose -f deploy/docker-compose.yml up --build
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: last_mile
+    ports:
+      - "5432:5432"
+    volumes:
+      - lmt_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d last_mile"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  lmt:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/last_mile?sslmode=disable
+    ports:
+      - "8080:8080"
+
+volumes:
+  lmt_pgdata:

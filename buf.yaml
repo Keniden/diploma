@@ -1,0 +1,67 @@
+version: v2
+
+# TODO(LASTMILE-011): the buf.build BSR module/remote plugins are unreachable
+# from this environment (403), so the PGV rules file is vendored at
+# api/validate/validate.proto and protoc plugins are invoked locally.
+lint:
+  use:
+    - STANDARD
+  ignore_only:
+    PACKAGE_DIRECTORY_MATCH:
+      - api
+    SERVICE_SUFFIX:
+      - api/proto/v1/public/driver/service.proto
+      - api/proto/v1/internals/tsd/tsd.proto
+      - api/proto/v1/internals/support/support.proto
+      - api/proto/v1/portal_internal/portal_internal.proto
+      - api/proto/v1/public/portal/portal.proto
+      - api/proto/v1/private/maintenance/maintenance.proto
+    # TODO(LASTMILE-008): stub RPCs typed with google.protobuf.Empty until the
+    # real contracts are adopted.
+    RPC_REQUEST_STANDARD_NAME:
+      - api/proto/v1/public/driver/service.proto
+      - api/proto/v1/internals/tsd/tsd.proto
+      - api/proto/v1/internals/support/support.proto
+      - api/proto/v1/portal_internal/portal_internal.proto
+      - api/proto/v1/public/portal/portal.proto
+      - api/proto/v1/private/maintenance/maintenance.proto
+    RPC_RESPONSE_STANDARD_NAME:
+      - api/proto/v1/public/driver/service.proto
+      - api/proto/v1/internals/tsd/tsd.proto
+      - api/proto/v1/internals/support/support.proto
+      - api/proto/v1/portal_internal/portal_internal.proto
+      - api/proto/v1/public/portal/portal.proto
+      - api/proto/v1/private/maintenance/maintenance.proto
+    RPC_REQUEST_RESPONSE_UNIQUE:
+      - api/proto/v1/public/driver/service.proto
+      - api/proto/v1/internals/tsd/tsd.proto
+      - api/proto/v1/internals/support/support.proto
+      - api/proto/v1/portal_internal/portal_internal.proto
+      - api/proto/v1/public/portal/portal.proto
+      - api/proto/v1/private/maintenance/maintenance.proto
+    # TODO(LASTMILE-011): vendored PGV rules file (third-party) is exempt from
+    # our project naming conventions.
+    ENUM_VALUE_PREFIX:
+      - api/validate/validate.proto
+    ENUM_ZERO_VALUE_SUFFIX:
+      - api/validate/validate.proto
+      # The real contract starts RoutePointStatus at WAITING_ARRIVAL (no
+      # _UNSPECIFIED zero value); keeping 1:1 wins over the lint rule.
+      - api/proto/v1/public/driver/route_point/enums.proto
+    PACKAGE_VERSION_SUFFIX:
+      - api/validate/validate.proto
+      - api/proto/v1/public/driver/service.proto
+      - api/proto/v1/public/driver/package/package.proto
+      - api/proto/v1/public/driver/route_point/enums.proto
+      - api/proto/v1/public/driver/shipment/enums.proto
+      - api/proto/v1/public/driver/shipment/shipment.proto
+      - api/proto/common/v1/portal/common.proto
+      - api/proto/v1/internals/tsd/tsd.proto
+      - api/proto/v1/internals/support/support.proto
+      - api/proto/v1/portal_internal/portal_internal.proto
+      - api/proto/v1/public/portal/portal.proto
+      - api/proto/v1/private/maintenance/maintenance.proto
+
+breaking:
+  use:
+    - FILE

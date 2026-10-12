@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package proto.v1.internals.tsd;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/internals/tsd;tsdv1";
+
+// TODO(LASTMILE-008): simplified contract; real TSD contract is generated via
+// easyp in the upstream repo.
+// TSD сервис складских терминалов.
+service TSD {
+  rpc ScanShipment(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ScanPackages(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListPackagesToScan(google.protobuf.Empty) returns (google.protobuf.Empty);
+}

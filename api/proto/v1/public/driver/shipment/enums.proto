@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto.v1.public.driver.shipment;
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/public/driver/shipment;shipmentv1";
+
+// Status статус перевозки.
+enum Status {
+  STATUS_UNSPECIFIED = 0; // Статус перевозки неопределен.
+  STATUS_NEW = 1; // Перевозка создана.
+  STATUS_ASSIGNED = 2; // Перевозке назначен водитель.
+  STATUS_RESERVE_LOADING = 3; // Водитель запросил резерв ворот на складе погрузки.
+  STATUS_LOADING = 4; // Водитель встал на ворота, грузоместа начали погружать из буфера склада в машину.
+  STATUS_IN_PROGRESS = 5; // Все грузоместа из буфера склада погружены в машину, водитель развозит грузоместа по ПВЗ и забирает возвраты.
+  STATUS_RESERVE_UNLOADING = 6; // Водитель запросил резерв ворот на складе разгрузки.
+  STATUS_UNLOADING = 7; // Водитель встал на ворота, грузоместа разгружаются.
+  STATUS_COMPLETED = 8; // Все грузоместа достигли места назначения (как прямой, так и обратный поток).
+  STATUS_CANCELED = 9; // Перевозка была отменена.
+}

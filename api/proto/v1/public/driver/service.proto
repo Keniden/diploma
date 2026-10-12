@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package proto.v1.public.driver;
+
+import "api/proto/v1/public/driver/package/package.proto";
+import "api/proto/v1/public/driver/shipment/shipment.proto";
+import "api/validate/validate.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/public/driver;driverv1";
+
+// Driver сервис водителя.
+//
+// TODO(LASTMILE-008): контракты упрощены: нет scopes/openapi/grpc-gateway
+// аннотаций, валидация на PGV. RPC вне портированного среза (27 всего)
+// объявлены с google.protobuf.Empty и возвращают Unimplemented.
+service Driver {
+  // SetPackagesStatus перевод пакетов по действию на точке.
+  rpc SetPackagesStatus(SetPackagesStatusRequest) returns (SetPackagesStatusResponse);
+
+  // GetActiveShipmentByDriverID активная перевозка водителя.
+  rpc GetActiveShipmentByDriverID(GetActiveShipmentByDriverIDRequest) returns (GetActiveShipmentByDriverIDResponse);
+
+  rpc ListItems(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc AddItem(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc DeleteItem(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ClearBasket(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListPackages(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListPackagesByPoint(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListRoutePackages(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc UpdatePackagesByRoutePoint(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc DeletePackage(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc CreateReserve(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc UpdateReserveQRStatus(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetReserveQRStatus(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc CancelReserve(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc CreateShipment(CreateShipmentRequest) returns (CreateShipmentResponse);
+  rpc CreateShipmentWithTransport(CreateShipmentWithTransportRequest) returns (CreateShipmentWithTransportResponse);
+  rpc ListShipments(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetShipmentByID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc UpdateShipmentTransport(UpdateShipmentTransportRequest) returns (UpdateShipmentTransportResponse);
+  rpc EndShipment(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetDocumentsByShipmentID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc UpdateRoutePointDriverArrived(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc UpdateRoutePointDriverDeparted(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetDocumentsByRoutePointID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListPoints(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListRoutesByPoint(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+// SetPackagesStatusRequest запрос перевода пакетов по действию.
+message SetPackagesStatusRequest {
+  string shipment_id = 1 [(validate.rules).string.uuid = true];
+  repeated PackageAtPoint packages = 2 [(validate.rules).repeated.min_items = 1];
+
+  // PackageAtPoint грузоместо и его действие на точке.
+  message PackageAtPoint {
+    string id = 1 [(validate.rules).string.uuid = true];
+    string point_id = 2 [(validate.rules).string.uuid = true];
+    proto.v1.public.driver.package.PointAction action = 3;
+    proto.v1.public.driver.package.PointActionStatus status = 4;
+    google.protobuf.Timestamp timestamp = 5;
+    optional string tare_sticker = 6;
+  }
+}
+
+// SetPackagesStatusResponse ответ перевода пакетов по действию.
+message SetPackagesStatusResponse {
+  bool success = 1;
+  Data data = 2;
+  string message = 3;
+
+  // Data данные ответа.
+  message Data {
+    repeated FailedPackages failed_packages = 1; // Грузоместа, которые не удалось отсканировать.
+
+    // FailedPackages грузоместо с ошибкой сканирования.
+    message FailedPackages {
+      string id = 1; // Идентификатор грузоместа.
+      string error_description = 2; // Описание ошибки при сканировании.
+    }
+  }
+}
+
+// GetActiveShipmentByDriverIDRequest запрос активной перевозки.
+message GetActiveShipmentByDriverIDRequest {}
+
+// GetActiveShipmentByDriverIDResponse ответ активной перевозки.
+message GetActiveShipmentByDriverIDResponse {
+  bool success = 1;
+  Data data = 2;
+  string message = 3;
+
+  // Data данные ответа.
+  message Data {
+    proto.v1.public.driver.shipment.Shipment shipment = 1;
+  }
+}
+
+// CreateShipmentRequest запрос создания перевозки.
+message CreateShipmentRequest {
+  int64 route_template_id = 1; // Идентификатор маршрута.
+}
+
+// CreateShipmentResponse ответ создания перевозки.
+message CreateShipmentResponse {
+  bool success = 1;
+  Data data = 2;
+  string message = 3;
+
+  // Data данные ответа.
+  message Data {
+    proto.v1.public.driver.shipment.Shipment shipment = 1;
+  }
+}
+
+// CreateShipmentWithTransportRequest запрос создания перевозки с номером ТС.
+message CreateShipmentWithTransportRequest {
+  int64 route_template_id = 1; // Идентификатор маршрута.
+  string car_license_plate = 2; // Номер ТС.
+}
+
+// CreateShipmentWithTransportResponse ответ создания перевозки с номером ТС.
+message CreateShipmentWithTransportResponse {
+  bool success = 1;
+  Data data = 2;
+  string message = 3;
+
+  // Data данные ответа.
+  message Data {
+    proto.v1.public.driver.shipment.Shipment shipment = 1;
+  }
+}
+
+// UpdateShipmentTransportRequest запрос назначения номера ТС перевозке.
+message UpdateShipmentTransportRequest {
+  string shipment_id = 1 [(validate.rules).string.uuid = true]; // Идентификатор перевозки.
+  string car_license_plate = 2; // Номер ТС.
+}
+
+// UpdateShipmentTransportResponse ответ назначения номера ТС перевозке.
+message UpdateShipmentTransportResponse {
+  bool success = 1;
+  Data data = 2;
+  string message = 3;
+
+  // Data данные ответа.
+  message Data {}
+}

@@ -1,0 +1,13 @@
+-- +goose Up
+ALTER TABLE lmt.reserve
+DROP COLUMN gate_id;
+
+ALTER TABLE lmt.reserve
+ADD COLUMN gate_id BIGINT NOT NULL DEFAULT 0;
+
+-- +goose Down
+ALTER TABLE lmt.reserve
+DROP COLUMN gate_id;
+
+ALTER TABLE lmt.reserve
+ADD COLUMN gate_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000';

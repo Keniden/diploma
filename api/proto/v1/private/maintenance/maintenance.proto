@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package proto.v1.private.maintenance;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/private/maintenance;maintenancev1";
+
+// TODO(LASTMILE-008): simplified contract; maintenance is not implemented in
+// the skeleton.
+// Maintenance служебный API генерации/удаления тестовых данных.
+service Maintenance {
+  rpc GenerateSampleData(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc CreateSampleData(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc DeleteSampleData(google.protobuf.Empty) returns (google.protobuf.Empty);
+}

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package proto.v1.public.driver.package;
+
+
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/public/driver/package;packagev1";
+
+// PointAction действие над грузоместом на точке.
+enum PointAction {
+  POINT_ACTION_UNSPECIFIED = 0; // Неопределено.
+  POINT_ACTION_LOAD = 1; // Погрузка.
+  POINT_ACTION_UNLOAD = 2; // Разгрузка.
+}
+
+// PointActionStatus статус действия над грузоместом.
+enum PointActionStatus {
+  POINT_ACTION_STATUS_UNSPECIFIED = 0; // Неопределено.
+  POINT_ACTION_STATUS_TODO = 1; // Необходимо действие.
+  POINT_ACTION_STATUS_DONE = 2; // Действие выполнено.
+  POINT_ACTION_STATUS_CANCELED = 3; // Действие отменено.
+}

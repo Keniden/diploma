@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package proto.v1.public.portal;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/public/portal;publicportalv1";
+
+// TODO(LASTMILE-008): simplified contract (13 real RPCs); the public portal is
+// not implemented in the skeleton.
+// PublicPortal сервис публичного портала (carrier scope).
+service PublicPortal {
+  rpc ListShipments(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetShipmentByID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetShipmentByPackageID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListTaresByShipmentID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListRoutePointsByShipmentID(google.protobuf.Empty) returns (google.protobuf.Empty);
+}

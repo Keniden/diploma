@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package proto.v1.common.portal;
+
+option go_package = "last-mile-task/pkg/gen/api/proto/common/v1/portal;commonv1";
+
+// TODO(LASTMILE-008): placeholder — the real common portal models (shipment,
+// settings, task, bonded_warehouse) are not needed by the skeleton flows.
+// Common portal models shared between portal surfaces.
+message Placeholder {
+  bool reserved = 1;
+}

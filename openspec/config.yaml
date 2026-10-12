@@ -1,0 +1,56 @@
+schema: spec-driven
+
+context: |
+  lang: Ru
+  ## Tech Stack
+  Go 1.26, gRPC + gRPC-gateway (protobuf), PostgreSQL (pgx + scany),
+  OpenTelemetry (OTLP), Zerolog, Prometheus metrics, S3/MinIO.
+
+  ## Architecture
+  Hexagonal (Ports & Adapters) with DDD for shipping domain. CQRS for read
+  models. Synchronous in-memory event bus for intra-transaction side effects.
+  Transactional outbox pattern for async delivery (cargo, WMS, documents, portal).
+
+  ## Layer Rules
+  - Domain never imports I/O, SQL, gRPC, protobuf, platform packages.
+  - Application owns ports (small interfaces), never imports infrastructure.
+  - Infrastructure implements application/query ports.
+  - Wiring in internal/platform/application/ (composition root via Config struct).
+  - Entity transitions via business-meaningful methods, not generic setters.
+  - Repositories persist whole aggregates, never batch-update single fields.
+
+  ## Code Style
+  - All code, comments, TODOs in English. Russian only in discussions/tickets.
+  - Package names must not be Go keywords — use suffixes (returnprovider, packagetype).
+  - Infrastructure adapter packages: unique names to avoid collisions
+    (e.g. pgdriver, basketpg) — never reuse raw technology name across contexts.
+  - TODO format: // TODO(LASTMILE-NNN): description.
+
+  ## gRPC Proto Rules
+  - Prefer generated Get* methods over manual nil-checks.
+  - Use Validate()/ValidateAll() for proto constraints.
+  - Proto types must not leak into application/domain/queries.
+  - Map proto↔domain DTOs in transport handlers or infrastructure adapters.
+  - Generate via task proto only, never ad hoc.
+
+  ## Domain: Last-Mile Logistics
+  - Services: Driver (mobile), TSD (warehouse terminals), Portal (internal+public
+    web), Maintenance (admin).
+  - External: cargo-core, cargo-shipment, cargo-documents, office-service,
+    route-service, gate-reserve-service, handshake-validator, tsp-api,
+    user-service, WMS (HTTP), S3 export-storage.
+  - Key flows: CreateShipment, CreateReserve, UpdateReserveQRStatus,
+    SetPackagesStatus, SyncPackagesAtRoutePoint, UpdatePackagesByRoutePoint,
+    EndShipment.
+
+  ## Test Rules
+  - Test domain logic without mocks, using in-memory entities/value objects.
+  - Test application services with mocked ports.
+  - Cover state machines, policies, and domain transitions with table-driven tests.
+  - Test infrastructure adapters when mapping/SQL/external integration carries risk.
+
+  ## Build & Check
+  - go build ./... must pass (zero errors).
+  - go vet ./... must pass (zero warnings).
+  - golangci-lint run ./... — fix new issues only, never touch pre-existing
+    warnings without dedicated task.

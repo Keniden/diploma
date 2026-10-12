@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto.v1.public.driver.route_point;
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/public/driver/route_point;routepointv1";
+
+// RoutePointStatus статус точки маршрута.
+enum RoutePointStatus {
+  ROUTE_POINT_STATUS_WAITING_ARRIVAL = 0; // Ожидание прибытия водителя.
+  ROUTE_POINT_STATUS_DRIVER_ARRIVED = 1; // Водитель прибыл на точку.
+  ROUTE_POINT_STATUS_PACKAGES_NOT_UNLOADED = 2; // Грузоместа не разгружены.
+  ROUTE_POINT_STATUS_PACKAGES_NOT_LOADED = 3; // Грузоместа не погружены.
+  ROUTE_POINT_STATUS_COMPLETED = 4; // Точка маршрута завершена.
+}

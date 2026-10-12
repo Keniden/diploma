@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package proto.v1.portal_internal;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "last-mile-task/pkg/gen/api/proto/v1/portal_internal;portalv1";
+
+// TODO(LASTMILE-008): simplified contract (17 real RPCs); the internal portal
+// is not implemented in the skeleton.
+// InternalPortal сервис внутреннего портала.
+service InternalPortal {
+  rpc ListShipments(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetShipmentByID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetShipmentByPackageID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListTaresByShipmentID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc ListRoutePointsByShipmentID(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc CreateShipmentsExport(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetShipmentsExport(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
